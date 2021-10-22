@@ -1,14 +1,17 @@
-use std::{cmp::{max, min}, process::Command};
+use std::{
+    cmp::{max, min},
+    process::Command,
+};
 
 fn main() -> anyhow::Result<()> {
-    let input = include_str!("../../test_input.txt");
+    let input = include_str!("../../input.txt");
     let mut dimension = PocketDimension::from(input);
 
     for _ in 0..6 {
+        dimension = dimension.next();
         dimension.display();
         println!("{}", dimension.count_active_cubes());
-        let _ = Command::new("pause").status();
-        dimension = dimension.next();
+        // let _ = Command::new("pause").status();
     }
 
     let result = dimension.count_active_cubes();
@@ -72,7 +75,9 @@ impl PocketDimension {
         for i in max(0, x as isize - 1) as usize..=min(19, x + 1) {
             for j in max(0, y as isize - 1) as usize..=min(19, y + 1) {
                 for k in max(0, z as isize - 1) as usize..=min(12, z + 1) {
-                    if self.cubes[i][j][k].active {
+                    if i == x && j == y && k == z {
+                        continue;
+                    } else if self.cubes[i][j][k].active {
                         active_neighbours += 1;
                     }
                 }
@@ -92,7 +97,7 @@ impl PocketDimension {
                         self.cubes[x][y][z].active,
                         self.count_active_neighbours(x, y, z),
                     ) {
-                        (true, 2) | (true, 3) | (false, 3) => true,
+                        (true, 2) | (_, 3) => true,
                         _ => false,
                     }
                 }
@@ -122,7 +127,7 @@ impl PocketDimension {
             for x in 0..self.cubes[0].len() {
                 println!("");
                 for y in 0..self.cubes.len() {
-                    let symbol =  match self.cubes[x][y][z].active {
+                    let symbol = match self.cubes[x][y][z].active {
                         true => '#',
                         false => '.',
                     };
