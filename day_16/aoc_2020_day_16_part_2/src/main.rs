@@ -53,7 +53,7 @@ fn main() {
         .iter()
         .enumerate()
         .filter(|(i, _)| indices_of_fields_starting_with_departure.contains(i))
-        .map(|(_, &num)| num as u64)
+        .map(|(_, &num)| u64::from(num))
         .product();
 
     println!("{}", final_result);
