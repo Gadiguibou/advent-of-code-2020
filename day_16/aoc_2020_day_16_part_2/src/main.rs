@@ -124,7 +124,7 @@ fn _find_valid_field_order(
         return solution.clone();
     }
 
-    for rule in rules.iter().rev() {
+    for rule in rules {
         if solutions_consumed.contains(&rule.0) {
             continue;
         }
